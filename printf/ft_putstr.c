@@ -1,21 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putchar_fd.c                                    :+:      :+:    :+:   */
+/*   ft_putstr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: supanuso <supanuso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/09 21:25:23 by supanuso          #+#    #+#             */
-/*   Updated: 2024/09/13 14:19:16 by supanuso         ###   ########.fr       */
+/*   Created: 2024/09/09 21:29:18 by supanuso          #+#    #+#             */
+/*   Updated: 2024/09/16 18:35:25 by supanuso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "libftprintf.h"
 
-int	ft_putchar_fd(char c, int fd)
+int	ft_putstr(char *s)
 {
-	if (fd < 0)
+	int i;
+
+	i = 0;
+	if (!s)
 		return (0);
-	write (fd, &c, 1);
-	return (1);
+	while (*s)
+	{
+		write(1, s, 1);
+		s++;
+		i++;
+	}
+	return(i);
 }

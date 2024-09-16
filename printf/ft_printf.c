@@ -6,7 +6,7 @@
 /*   By: supanuso <supanuso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 16:35:38 by supanuso          #+#    #+#             */
-/*   Updated: 2024/09/13 14:34:01 by supanuso         ###   ########.fr       */
+/*   Updated: 2024/09/16 19:04:43 by supanuso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,21 +15,23 @@
 int	ft_format(const char *format, va_list arg)
 {
 	if (*format == 'c')
-		return (ft_putchar_fd((char)va_arg(arg, int), 1));
+		return (ft_putchar((unsigned char)va_arg(arg, int)));
 	else if (*format == 's')
-		return (ft_putstr_fd(va_arg(arg, char *), 1));
-	// else if (*format == 'p')
-	// 	return (ft_putptr_fd(va_arg(arg, unsigned long long), 1));
+		return (ft_putstr(va_arg(arg, char *)));
+	else if (*format == 'p')
+		return (ft_putptr_base(va_arg(arg, unsigned long long), "0123456789abcdef"));
 	else if (*format == 'd' || *format == 'i')
-		return (ft_putnbr_fd(va_arg(arg, int), 1));
-	// else if (*format == 'u')
-	// 	return (ft_putunsign_fd(va_arg(arg, unsigned int), 1));
-	// else if (*format == 'x')
-	// 	return (ft_putbigbase_fd(va_arg(arg, int), 1));
-	// else if (*format == 'X')
-	// 	return (ft_putlowbase_fd(va_arg(arg, int), 1));
+		return (ft_putnbr(va_arg(arg, int)));
+	else if (*format == 'u')
+		return (ft_putnbr_base(va_arg(arg, unsigned int), "0123456789"));
+	else if (*format == 'x')
+		return (ft_putnbr_base(va_arg(arg, unsigned int), "0123456789abcdef"));
+	else if (*format == 'X')
+		return (ft_putnbr_base(va_arg(arg, unsigned int), "0123456789ABCDEF"));
 	else if (*format == '%')
-		return (ft_putchar_fd('%', 1));
+		return (ft_putchar('%'));
+	else
+		return (0);
 }
 
 int	ft_printf(const char *format, ...)
@@ -40,25 +42,17 @@ int	ft_printf(const char *format, ...)
 	len = 0;
 	va_start(arg, format);
 
-	printf("%d", va_arg(arg, int));
-	printf("%d", va_arg(arg, int));
 	while (*format)
 	{
 		if (*format == '%')
-			len += ft_format(++format, arg);
-		else
 		{
-			ft_putchar_fd(format, 1);
-			len++;
+			checkformat();
+			len += ft_format(++format, arg);
 		}
+		else
+			len +=ft_putchar((char)*format);
 		format++;
 	}
 	va_end(arg);
 	return (len);
-}
-
-int main(int argc, char const *argv[])
-{
-	ft_printf("%c", 'o');
-	return 0;
 }
