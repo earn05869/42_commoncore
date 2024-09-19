@@ -6,7 +6,7 @@
 /*   By: supanuso <supanuso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 16:35:38 by supanuso          #+#    #+#             */
-/*   Updated: 2024/09/16 19:04:43 by supanuso         ###   ########.fr       */
+/*   Updated: 2024/09/19 14:49:11 by supanuso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,6 @@ int	ft_printf(const char *format, ...)
 	{
 		if (*format == '%')
 		{
-			checkformat();
 			len += ft_format(++format, arg);
 		}
 		else

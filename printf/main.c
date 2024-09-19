@@ -6,7 +6,7 @@
 /*   By: supanuso <supanuso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 17:40:53 by supanuso          #+#    #+#             */
-/*   Updated: 2024/09/16 19:25:16 by supanuso         ###   ########.fr       */
+/*   Updated: 2024/09/19 15:12:51 by supanuso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 
 int main(void)
 {
-	char num[] = "hello world";
+	unsigned int num = 123415;
 
-	ft_printf("str: %u", &num);
-	printf("str: %u", &num);
+	printf("len : %d \n",ft_printf("str: %u", num));
+	printf("len : %d \n",printf("str: %u", num));
 	return (0);
 }

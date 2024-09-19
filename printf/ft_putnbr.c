@@ -6,7 +6,7 @@
 /*   By: supanuso <supanuso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 21:46:10 by supanuso          #+#    #+#             */
-/*   Updated: 2024/09/16 18:43:17 by supanuso         ###   ########.fr       */
+/*   Updated: 2024/09/19 15:06:51 by supanuso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,17 +18,17 @@ static void	ft_put(int n, int sign, int *len)
 	{
 		ft_put(n / 10, sign, len);
 		ft_putchar(((sign * n) % 10) + '0');
-		len++;
+		*len += 1;
 	}
 	else
 	{
 		if (sign == -1)
 		{
 			ft_putchar('-');
-			len++;
+			*len += 1;
 		}
 		ft_putchar(((sign * n) % 10) + '0');
-		len++;
+		*len += 1;
 	}
 }
 

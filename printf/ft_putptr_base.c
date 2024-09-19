@@ -6,28 +6,26 @@
 /*   By: supanuso <supanuso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 21:46:10 by supanuso          #+#    #+#             */
-/*   Updated: 2024/09/16 18:52:21 by supanuso         ###   ########.fr       */
+/*   Updated: 2024/09/19 15:05:15 by supanuso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libftprintf.h"
 
-static int	ft_putptr(unsigned long long nbr, char *base, unsigned int size, int len)
+static void	ft_putptr(unsigned long long nbr, char *base, unsigned int size, int *len)
 {
 	if (nbr >= size)
 	{
 		ft_putptr(nbr / size, base, size, len);
 		ft_putchar(base[nbr % size]);
-		len++;
+		*len += 1;
 	}
 	else
 	{
 		nbr = nbr % size;
 		ft_putchar(base[nbr]);
-		len++;
-		return (len);
+		*len += 1;
 	}
-	return (0);
 }
 
 static int	check_same_base(char *base, unsigned int size)
@@ -67,6 +65,6 @@ int	ft_putptr_base(unsigned long long nbr, char *base)
 		i++;
 	size = i;
 	if (size > 1 && check_same_base(base, size))
-		len += ft_putptr(nbr, base, size, len);
+		ft_putptr(nbr, base, size, &len);
 	return (len);
 }
