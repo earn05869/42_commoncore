@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: supanuso <supanuso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/11 16:35:38 by supanuso          #+#    #+#             */
-/*   Updated: 2024/09/19 14:49:11 by supanuso         ###   ########.fr       */
+/*   Created: 2024/09/19 18:31:13 by supanuso          #+#    #+#             */
+/*   Updated: 2024/09/19 18:42:59 by supanuso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	ft_format(const char *format, va_list arg)
 	else if (*format == 's')
 		return (ft_putstr(va_arg(arg, char *)));
 	else if (*format == 'p')
-		return (ft_putptr_base(va_arg(arg, unsigned long long), "0123456789abcdef"));
+		return (ft_putptr_base(va_arg(arg, void *), "0123456789abcdef"));
 	else if (*format == 'd' || *format == 'i')
 		return (ft_putnbr(va_arg(arg, int)));
 	else if (*format == 'u')
@@ -31,17 +31,18 @@ int	ft_format(const char *format, va_list arg)
 	else if (*format == '%')
 		return (ft_putchar('%'));
 	else
-		return (0);
+	{
+		return (write(1, "%", 1) + ft_putchar(*format));
+	}
 }
 
 int	ft_printf(const char *format, ...)
 {
-	va_list arg;
+	va_list	arg;
 	int		len;
 
 	len = 0;
 	va_start(arg, format);
-
 	while (*format)
 	{
 		if (*format == '%')
@@ -49,7 +50,7 @@ int	ft_printf(const char *format, ...)
 			len += ft_format(++format, arg);
 		}
 		else
-			len +=ft_putchar((char)*format);
+			len += ft_putchar((char)*format);
 		format++;
 	}
 	va_end(arg);

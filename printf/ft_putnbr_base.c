@@ -6,13 +6,14 @@
 /*   By: supanuso <supanuso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 17:50:15 by supanuso          #+#    #+#             */
-/*   Updated: 2024/09/19 15:13:44 by supanuso         ###   ########.fr       */
+/*   Updated: 2024/09/19 18:37:19 by supanuso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libftprintf.h"
 
-static void	ft_putbase(unsigned int nbr, char *base, unsigned int size, int *len)
+static void	ft_putbase(unsigned int nbr, char *base,
+	unsigned int size, int *len)
 {
 	if (nbr >= size)
 	{

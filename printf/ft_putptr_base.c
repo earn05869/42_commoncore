@@ -6,13 +6,14 @@
 /*   By: supanuso <supanuso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 21:46:10 by supanuso          #+#    #+#             */
-/*   Updated: 2024/09/19 15:05:15 by supanuso         ###   ########.fr       */
+/*   Updated: 2024/09/19 18:36:04 by supanuso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libftprintf.h"
 
-static void	ft_putptr(unsigned long long nbr, char *base, unsigned int size, int *len)
+static void	ft_putptr(unsigned long long nbr,
+	char *base, unsigned int size, int *len)
 {
 	if (nbr >= size)
 	{
@@ -52,7 +53,7 @@ static int	check_same_base(char *base, unsigned int size)
 	return (1);
 }
 
-int	ft_putptr_base(unsigned long long nbr, char *base)
+int	ft_putptr_base(void *ptr, char *base)
 {
 	unsigned int	i;
 	unsigned int	size;
@@ -60,11 +61,16 @@ int	ft_putptr_base(unsigned long long nbr, char *base)
 
 	i = 0;
 	len = 2;
-	write (1, "0x", 2);
+	if (ptr == NULL)
+	{
+		write(1, "(nil)", 5);
+		return (5);
+	}
+	write(1, "0x", 2);
 	while (base[i] != '\0' && base[i] != '+' && base[i] != '-')
 		i++;
 	size = i;
 	if (size > 1 && check_same_base(base, size))
-		ft_putptr(nbr, base, size, &len);
+		ft_putptr((unsigned long long)ptr, base, size, &len);
 	return (len);
 }
