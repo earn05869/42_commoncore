@@ -1,30 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: supanuso <supanuso@student.42.fr>          +#+  +:+       +#+        */
+/*   By: supanuso <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/24 13:41:58 by supanuso          #+#    #+#             */
-/*   Updated: 2024/09/24 16:31:28 by supanuso         ###   ########.fr       */
+/*   Created: 2024/09/24 16:20:11 by supanuso          #+#    #+#             */
+/*   Updated: 2024/09/24 16:20:42 by supanuso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
+#include "get_next_line.h" 
 
-#define BUFFER_SIZE 16
-
-typedef struct s_list
+int main()
 {
-	void			*content;
-	struct s_list	*next;
-}	t_list;
+    int fd = open("test.txt", O_RDONLY);
+    char *line;
 
-# include <unistd.h>
-# include <stdio.h>
-# include <stdlib.h>
+    while ((line = get_next_line(fd)) != NULL)
+    {
+        printf("%s", line);
+        free(line);
+    }
 
-char	*get_next_line(int fd);
-
-#endif
+    close(fd);
+    return 0;
+}
