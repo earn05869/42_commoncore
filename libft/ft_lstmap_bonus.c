@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstmap.c                                        :+:      :+:    :+:   */
+/*   ft_lstmap_bonus.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: supanuso <supanuso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 16:05:48 by supanuso          #+#    #+#             */
-/*   Updated: 2024/09/11 14:52:06 by supanuso         ###   ########.fr       */
+/*   Updated: 2024/09/24 13:27:51 by supanuso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,16 +16,19 @@ t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *))
 {
 	t_list	*new;
 	t_list	*new_list;
+	void	*new_content;
 
 	if (!lst || !f || !del)
 		return (NULL);
-	new = NULL;
 	new_list = NULL;
 	while (lst)
 	{
-		new = ft_lstnew(f(lst->content));
+		new_content = f(lst->content);
+		new = ft_lstnew(new_content);
 		if (!new)
 		{
+			if (new_content)
+				del(new_content);
 			ft_lstclear(&new_list, del);
 			return (NULL);
 		}

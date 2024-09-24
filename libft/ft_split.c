@@ -6,7 +6,7 @@
 /*   By: supanuso <supanuso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 14:13:17 by supanuso          #+#    #+#             */
-/*   Updated: 2024/09/10 14:31:52 by supanuso         ###   ########.fr       */
+/*   Updated: 2024/09/24 13:31:20 by supanuso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,6 +105,8 @@ char	**ft_split(char const *s, char c)
 	size_t	*pos;
 	char	**set_str;
 
+	if (!s)
+		return (NULL);
 	if (ft_strlen(s) == 0)
 	{
 		set_str = (char **)ft_calloc(1, sizeof(char *));
@@ -114,6 +116,8 @@ char	**ft_split(char const *s, char c)
 	}
 	sub = ft_countsub(s, c);
 	pos = ft_setpos(s, c, sub);
+	if (!pos)
+		return (NULL);
 	set_str = ft_setsub(s, pos, sub);
 	free (pos);
 	return (set_str);
