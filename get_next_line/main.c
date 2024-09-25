@@ -3,26 +3,28 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: supanuso <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: supanuso <supanuso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 16:20:11 by supanuso          #+#    #+#             */
-/*   Updated: 2024/09/24 16:20:42 by supanuso         ###   ########.fr       */
+/*   Updated: 2024/09/26 01:51:13 by supanuso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h" 
 
-int main()
+int	main(void)
 {
-    int fd = open("test.txt", O_RDONLY);
-    char *line;
+	int		fd;
+	char	*line;
 
-    while ((line = get_next_line(fd)) != NULL)
-    {
-        printf("%s", line);
-        free(line);
-    }
-
-    close(fd);
-    return 0;
+	fd = open("test.txt", O_RDONLY);
+	line = get_next_line(fd);
+	while (line != NULL)
+	{
+		printf("%s", line);
+		free(line);
+		line = get_next_line(fd);
+	}
+	close(fd);
+	return (0);
 }
