@@ -6,7 +6,7 @@
 /*   By: supanuso <supanuso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 13:42:01 by supanuso          #+#    #+#             */
-/*   Updated: 2024/09/26 01:46:44 by supanuso         ###   ########.fr       */
+/*   Updated: 2024/09/26 15:57:34 by supanuso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,24 +15,24 @@
 void	remain_lst(t_list **list, int pos_nl)
 {
 	t_list	*last;
-	t_list	*new_list;
 	char	*remainder;
 	int		i;
 	int		j;
 
+	i = pos_nl + 1;\
+	j = 0;
 	last = ft_lstlast(*list);
-	if (!last)
-		return ;
-	remainder = malloc(BUFFER_SIZE - pos_nl + 1);
+	while (last->content[j])
+		j++;
+	remainder = (char *)malloc((j - i + 1) * sizeof(char));
 	if (!remainder)
 		return ;
-	i = pos_nl + 1;
 	j = 0;
 	while (last->content[i])
 		remainder[j++] = last->content[i++];
 	remainder[j] = '\0';
-	free(last->content);
-	last->content = remainder;
+	ft_lstclear(list, free);
+	*list = ft_lstnew(remainder);
 }
 
 char	*get_line(t_list *list, int pos_nl)
@@ -69,20 +69,19 @@ int	found_nl(char *buf)
 	int	i;
 
 	i = 0;
-	while (buf[i])
+	while (i < BUFFER_SIZE)
 	{
-		if (buf[i] == '\n')
+		if (buf[i] == '\n' || buf[i + 1] == '\0')
 			return (i);
 		i++;
 	}
-	return (0);
+	return (-1);
 }
 
 int	create_list(t_list **list, int fd)
 {
 	int		byte_read;
 	char	*buf;
-	t_list	*new;
 	int		pos_nl;
 
 	pos_nl = 0;
@@ -99,15 +98,16 @@ int	create_list(t_list **list, int fd)
 		}
 		buf[byte_read] = '\0';
 		pos_nl = found_nl(buf);
-		new = ft_lstnew(buf);
-		ft_lstadd_back(list, new);
+		ft_lstadd_back(list, ft_lstnew(buf));
+		printf("lst :%s\n", (*list)->content);
+		free(buf);
 	}
 	return (pos_nl);
 }
 
 char	*get_next_line(int fd)
 {
-	static t_list	*list = NULL;
+	static t_list	*list;
 	char			*next_line;
 	int				pos_nl;
 
@@ -115,8 +115,13 @@ char	*get_next_line(int fd)
 		return (NULL);
 	pos_nl = create_list(&list, fd);
 	if (pos_nl == -1 || !list)
+	{
+		ft_lstclear(&list, free);
 		return (NULL);
+	}
 	next_line = get_line(list, pos_nl);
+	printf("%s", next_line);
+	exit(0);
 	remain_lst(&list, pos_nl);
 	return (next_line);
 }

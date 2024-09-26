@@ -6,7 +6,7 @@
 /*   By: supanuso <supanuso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 18:31:13 by supanuso          #+#    #+#             */
-/*   Updated: 2024/09/19 18:42:59 by supanuso         ###   ########.fr       */
+/*   Updated: 2024/09/26 14:38:55 by supanuso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,8 @@ int	ft_printf(const char *format, ...)
 	int		len;
 
 	len = 0;
+	if (!format)
+		return (-1);
 	va_start(arg, format);
 	while (*format)
 	{
