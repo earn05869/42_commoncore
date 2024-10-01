@@ -6,7 +6,7 @@
 /*   By: supanuso <supanuso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 13:41:58 by supanuso          #+#    #+#             */
-/*   Updated: 2024/09/26 14:26:19 by supanuso         ###   ########.fr       */
+/*   Updated: 2024/10/01 21:55:50 by supanuso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # define GET_NEXT_LINE_H
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 16
+#  define BUFFER_SIZE 1
 # endif
 
 # include <unistd.h>

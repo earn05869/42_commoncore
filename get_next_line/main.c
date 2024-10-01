@@ -6,25 +6,33 @@
 /*   By: supanuso <supanuso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 16:20:11 by supanuso          #+#    #+#             */
-/*   Updated: 2024/09/26 15:42:49 by supanuso         ###   ########.fr       */
+/*   Updated: 2024/10/01 21:54:12 by supanuso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 #include <fcntl.h>
+#include <stdio.h>
+#include <stdlib.h>
 
-int	main(void)
+int main(void)
 {
 	int		fd;
 	char	*line;
-
+	
 	fd = open("tester/files/41_no_nl", O_RDONLY);
-	line = get_next_line(fd);
-	while (line != NULL)
+	if (fd < 0)
 	{
+		perror("Failed to open file");
+		return (1);
+	}
+	while (1)
+	{	
+		line = get_next_line(fd);
+		if (line == NULL)
+			break;
 		printf("%s", line);
 		free(line);
-		line = get_next_line(fd);
 	}
 	close(fd);
 	return (0);

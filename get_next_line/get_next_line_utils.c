@@ -6,7 +6,7 @@
 /*   By: supanuso <supanuso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 13:42:04 by supanuso          #+#    #+#             */
-/*   Updated: 2024/09/26 16:36:49 by supanuso         ###   ########.fr       */
+/*   Updated: 2024/10/01 21:49:43 by supanuso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@ t_list	*ft_lstnew(char *content)
 	t_list	*new;
 	char	*str;
 	int		len;
-	int		i;
 
 	len = 0;
 	while (content[len])
@@ -26,9 +25,15 @@ t_list	*ft_lstnew(char *content)
 	if (!new)
 		return (NULL);
 	str = (char *)malloc(len + 1);
-	while (i < len)
-		str[i] = content[i];
-	new->content[i] = '\0';
+	if (!str)
+	{
+		free(new);
+		return (NULL);
+	}
+	str[len] = '\0';
+	while (--len >= 0)
+		str[len] = content[len];
+	new->content = str;
 	new->next = NULL;
 	return (new);
 }
