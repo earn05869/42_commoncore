@@ -6,7 +6,7 @@
 /*   By: supanuso <supanuso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 16:20:11 by supanuso          #+#    #+#             */
-/*   Updated: 2024/10/01 21:54:12 by supanuso         ###   ########.fr       */
+/*   Updated: 2024/10/02 17:34:54 by supanuso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int main(void)
+int	main(void)
 {
 	int		fd;
 	char	*line;
-	
+
 	fd = open("tester/files/41_no_nl", O_RDONLY);
 	if (fd < 0)
 	{
@@ -27,10 +27,10 @@ int main(void)
 		return (1);
 	}
 	while (1)
-	{	
+	{
 		line = get_next_line(fd);
 		if (line == NULL)
-			break;
+			break ;
 		printf("%s", line);
 		free(line);
 	}
