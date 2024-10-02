@@ -6,7 +6,7 @@
 /*   By: supanuso <supanuso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 13:42:04 by supanuso          #+#    #+#             */
-/*   Updated: 2024/10/01 21:49:43 by supanuso         ###   ########.fr       */
+/*   Updated: 2024/10/02 14:49:44 by supanuso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,4 +96,3 @@ void	ft_lstclear(t_list **lst, void (*del)(void *))
 	free(*lst);
 	*lst = NULL;
 }
-
