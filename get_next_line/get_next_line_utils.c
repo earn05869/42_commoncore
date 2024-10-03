@@ -6,34 +6,36 @@
 /*   By: supanuso <supanuso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 13:42:04 by supanuso          #+#    #+#             */
-/*   Updated: 2024/10/02 14:49:44 by supanuso         ###   ########.fr       */
+/*   Updated: 2024/10/03 23:44:21 by supanuso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-t_list	*ft_lstnew(char *content)
+t_list	*ft_lstnew(char *content, int byte_read)
 {
 	t_list	*new;
 	char	*str;
-	int		len;
+	int		i;
 
-	len = 0;
-	while (content[len])
-		len++;
-	new = (t_list *)malloc(sizeof(t_list));
-	if (!new)
+	if (!content || byte_read < 0)
 		return (NULL);
-	str = (char *)malloc(len + 1);
-	if (!str)
+	new = (t_list *)malloc(sizeof(t_list));
+	str = (char *)malloc(byte_read + 1);
+	if (!str || !new)
 	{
 		free(new);
 		return (NULL);
 	}
-	str[len] = '\0';
-	while (--len >= 0)
-		str[len] = content[len];
+	i = 0;
+	while (i < byte_read)
+	{
+		str[i] = content[i];
+		i++;
+	}
+	str[byte_read] = '\0';
 	new->content = str;
+	new->byte_read = byte_read;
 	new->next = NULL;
 	return (new);
 }
@@ -72,7 +74,7 @@ int	ft_lstsize(t_list *lst)
 
 	tmp = lst;
 	len = 0;
-	while (tmp)
+	while (tmp && tmp->next)
 	{
 		tmp = tmp->next;
 		len++;
@@ -84,15 +86,14 @@ void	ft_lstclear(t_list **lst, void (*del)(void *))
 {
 	t_list	*tmp;
 
-	if (!lst)
+	if (!lst || !*lst)
 		return ;
 	while (*lst)
 	{
 		tmp = (*lst)->next;
-		(*del)((*lst)->content);
+		if ((*lst)->content && del)
+			(*del)((*lst)->content);
 		free (*lst);
 		*lst = tmp;
 	}
-	free(*lst);
-	*lst = NULL;
 }
