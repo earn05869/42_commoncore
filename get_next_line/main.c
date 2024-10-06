@@ -6,7 +6,7 @@
 /*   By: supanuso <supanuso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 16:20:11 by supanuso          #+#    #+#             */
-/*   Updated: 2024/10/04 01:06:54 by supanuso         ###   ########.fr       */
+/*   Updated: 2024/10/06 20:42:47 by supanuso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int	main(void)
 	int		fd;
 	char	*line;
 
-	fd = open("tester/files/41_no_nl", O_RDONLY);
+	fd = open("tester/files/multiple_line_no_nl", O_RDONLY);
 	if (fd < 0)
 	{
 		perror("Failed to open file");

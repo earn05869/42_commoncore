@@ -6,7 +6,7 @@
 /*   By: supanuso <supanuso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 13:41:58 by supanuso          #+#    #+#             */
-/*   Updated: 2024/10/03 23:24:07 by supanuso         ###   ########.fr       */
+/*   Updated: 2024/10/06 12:31:18 by supanuso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # define GET_NEXT_LINE_H
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 1
+#  define BUFFER_SIZE 42
 # endif
 
 # include <unistd.h>
@@ -32,7 +32,7 @@ char	*get_next_line(int fd);
 t_list	*ft_lstnew(char *content, int byte_read);
 t_list	*ft_lstlast(t_list *lst);
 void	ft_lstadd_back(t_list **lst, t_list *new);
-int		ft_lstsize(t_list *lst);
+int		ft_lstsize_to_len(t_list *lst, int pos_nl);
 void	ft_lstclear(t_list **lst, void (*del)(void *));
 
 #endif

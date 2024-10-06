@@ -6,13 +6,13 @@
 /*   By: supanuso <supanuso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 13:42:01 by supanuso          #+#    #+#             */
-/*   Updated: 2024/10/04 01:45:45 by supanuso         ###   ########.fr       */
+/*   Updated: 2024/10/06 20:42:20 by supanuso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-void	remain_lst(t_list **list, int pos_nl)
+static void	remain_lst(t_list **list, int pos_nl)
 {
 	t_list	*last;
 	char	*remainder;
@@ -28,71 +28,71 @@ void	remain_lst(t_list **list, int pos_nl)
 	}
 	remainder = (char *)malloc(remaining_bytes + 1);
 	if (!remainder)
-		return ;
-	i = 0;
-	while (i < remaining_bytes)
 	{
-		remainder[i] = last->content[pos_nl + 1 + i];
-		i++;
+		ft_lstclear(list, free);
+		return ;
 	}
+	i = -1;
+	while (++i < remaining_bytes)
+		remainder[i] = last->content[pos_nl + 1 + i];
 	remainder[i] = '\0';
 	ft_lstclear(list, free);
 	*list = ft_lstnew(remainder, remaining_bytes);
 	free(remainder);
 }
 
-char	*get_line(t_list *list, int pos_nl)
+static char	*extract_line(t_list *list, int pos_nl)
 {
 	char	*str;
 	int		i;
 	int		j;
-	int		len;
 	t_list	*current;
 
 	if (!list)
 		return (NULL);
-	j = 0;
-	current = list;
-	len = ((ft_lstsize(list) * BUFFER_SIZE) + pos_nl + 1);
-	str = (char *)malloc(len + 1);
+	str = (char *)malloc(ft_lstsize_to_len(list, pos_nl) + 1);
 	if (!str)
 		return (NULL);
-	while (current)
+	j = 0;
+	current = list;
+	while (current->next)
 	{
-		i = 0;
-		while (i < current->byte_read && (current->next || i <= pos_nl))
-			str[j++] = current->content[i++];
+		i = -1;
+		while (++i < current->byte_read)
+			str[j++] = current->content[i];
 		current = current->next;
 	}
+	i = -1;
+	while (++i <= pos_nl)
+		str[j++] = current->content[i];
 	str[j] = '\0';
 	return (str);
 }
 
-int	found_nl(char *str, int byte_read)
+static int	found_nl(char *str, int byte_read, int remain)
 {
 	int	i;
 
-	if (!str)
+	if (!str || byte_read <= 0)
 		return (-1);
 	i = 0;
 	while (i < byte_read)
 	{
-		if (str[i] == '\n' || str[i] == '\0')
+		if (str[i] == '\n')
 			return (i);
 		i++;
 	}
-	return (-1);
+	if (byte_read < BUFFER_SIZE && remain != 1)
+		return (i);
+	return (-2);
 }
 
-int	create_list(t_list **list, int fd)
+static int	process_buffer(t_list **list, int fd)
 {
 	int		byte_read;
 	char	*buf;
-	int		pos_nl;
 	t_list	*new;
 
-	if (fd < 0 || BUFFER_SIZE <= 0)
-		return (-1);
 	buf = (char *)malloc(BUFFER_SIZE + 1);
 	if (!buf)
 		return (-1);
@@ -100,6 +100,8 @@ int	create_list(t_list **list, int fd)
 	if (byte_read <= 0)
 	{
 		free(buf);
+		if (byte_read == 0 && ft_lstlast(*list))
+			return (ft_lstlast(*list)->byte_read - 1);
 		return (-1);
 	}
 	buf[byte_read] = '\0';
@@ -108,8 +110,7 @@ int	create_list(t_list **list, int fd)
 	if (!new)
 		return (-1);
 	ft_lstadd_back(list, new);
-	pos_nl = found_nl(new->content, new->byte_read);
-	return (pos_nl);
+	return (found_nl(new->content, new->byte_read, 0));
 }
 
 char	*get_next_line(int fd)
@@ -120,19 +121,22 @@ char	*get_next_line(int fd)
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	pos_nl = -1;
+	pos_nl = -2;
 	if (list)
-		pos_nl = found_nl(ft_lstlast(list)->content, ft_lstlast(list)->byte_read);
-	while (pos_nl == -1)
+		pos_nl = found_nl(ft_lstlast(list)->content,
+				ft_lstlast(list)->byte_read, 1);
+	if (pos_nl == -1)
+		return (NULL);
+	while (pos_nl == -2)
 	{
-		pos_nl = create_list(&list, fd);
-		if (!list || !list->content)
+		pos_nl = process_buffer(&list, fd);
+		if (!list || pos_nl == -1)
 		{
 			ft_lstclear(&list, free);
 			return (NULL);
 		}
 	}
-	next_line = get_line(list, pos_nl);
+	next_line = extract_line(list, pos_nl);
 	remain_lst(&list, pos_nl);
 	return (next_line);
 }

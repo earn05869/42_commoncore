@@ -6,7 +6,7 @@
 /*   By: supanuso <supanuso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 13:42:04 by supanuso          #+#    #+#             */
-/*   Updated: 2024/10/03 23:44:21 by supanuso         ###   ########.fr       */
+/*   Updated: 2024/10/06 13:45:56 by supanuso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,18 +67,20 @@ void	ft_lstadd_back(t_list **lst, t_list *new)
 	}
 }
 
-int	ft_lstsize(t_list *lst)
+int	ft_lstsize_to_len(t_list *lst, int pos_nl)
 {
 	t_list	*tmp;
 	int		len;
 
 	tmp = lst;
 	len = 0;
-	while (tmp && tmp->next)
+	while (tmp->next)
 	{
+		len += tmp->byte_read;
 		tmp = tmp->next;
-		len++;
 	}
+	if (tmp->content)
+		len += pos_nl + 1;
 	return (len);
 }
 
