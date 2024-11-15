@@ -23,67 +23,105 @@ t_gnl	*new_data(char ***remain, int fd)
 		*remain =  (char **)malloc(SIZE * sizeof(char *));
 		if (!(*remain))
 			return (NULL);
-	}	
-	line = NULL;
+	}
 	data = (t_gnl *)malloc(sizeof(t_gnl));
 	lst = (char **)malloc(SIZE * sizeof(char *));
 	if (!data || !lst)
 	{
-		free_all(*remain, data);
+		free_mode(*remain, data, a);
 		return (NULL);
 	}
-	data->pos_end = -1;
+	data->index = 0;
 	data->len = 0;
 	return (data);
 }
-int	extract_remain(t_gnl **data, char ***remain, int fd)
+
+int	extract_remain(t_gnl **data, char ***remain, int fd, char **line)
 {
-	int		len;
+	char	*tmp;
 	char	*str;
-	int		i;
+	int		len;
+	int		found;
+	int		remain_len;
 	
-	str = (*remain)[fd]; 
-	if (!str)
+	remain_len = 0;
+	len = 0;
+	tmp = (*remain)[fd];
+	if (!tmp)
 		return (0);
-	len = ft_strlen(str);
-	while (str[i] && str[i] != '\n')
-	
-	
+	found = ft_strlen_chr(tmp, '\n', &len);
+	str = (char *)malloc(len + 1);
+	if (!str)
+	{
+		free_mode((*remain), (*data), 'a');
+		return (1);
+	}
+	ft_memcpy(line, str, len);
+	str[len] = '\0';
+	if (found)
+	{
+		*line = str;
+		new_remain(remain, tmp + len, fd);
+		free_mode((*remain), (*data), 'd');
+		return (1);
+	}
+	(*data)->len += len;
+	(*data)->lst[((*data)->index)++] = str;
+	return (0);
 }
 
-void	free_all(char **remain , t_gnl *data)
+void	free_mode(char **remain , t_gnl *data, char mode)
 {
 	int	i;
 
 	i = -1;
-	if (remain)
+	if (remain && (mode == 'a' || mode == 'r'))
 	{
 		while (++i < SIZE)
 			if (remain[i])
 				free(remain[i]);
 		free(remain);
 	}
-	if (data->line)
-		free(data->line);
-	i = -1;
-	if (data->lst)
+	if (mode == 'a' || mode == 'd')
 	{
-		while (++i < SIZE)
-			if (data->lst[i])
-				free(data->lst[i]);
-		free(data->lst);
-	}
+		if (data->line )
+			free(data->line);
+		i = -1;
+		if (data->lst)
+		{
+			while (++i < SIZE)
+				if (data->lst[i])
+					free(data->lst[i]);
+			free(data->lst);
+		}
 	free (data);
+	}
 }
 
-int ft_strlen(const char *str)
+int	ft_strlen_chr(const char *str , char c, int *len)
 {
-	int		i;
-
 	if (!str)
 		return (0);
-	i = 0;
-	while (str[i])
-		i++;
-	return (i);
+	*len = 0;
+	while (str[*len])
+	{
+		if (c != 0 && str[*len] == c)
+			return (1);
+		(*len)++;
+	}
+	return (0);
+}
+
+void	*ft_memcpy(void *dst, const void *src, size_t n)
+{
+	unsigned char	*tmp_dst;
+	unsigned char	*tmp_src;
+
+	if (!src && !dst)
+		return (dst);
+	tmp_dst = (unsigned char *)dst;
+	tmp_src = (unsigned char *)src;
+	while (n-- > 0)
+		*tmp_dst++ = *tmp_src++;
+	return (dst);
 }

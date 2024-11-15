@@ -27,8 +27,8 @@
 typedef struct s_gnl
 {
 	char		**lst;
-	char		*line;
-	int			pos_end;
+	int			index;
+	int			pos_nl;
 	int			len;
 }	t_gnl;
 
