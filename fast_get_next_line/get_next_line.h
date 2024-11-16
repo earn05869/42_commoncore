@@ -17,19 +17,21 @@
 # include <unistd.h>
 # include <stdio.h>
 # include <fcntl.h>
+#include <stdint.h>
+#include <stddef.h>
 
 # ifndef BUFFER_SIZE
 #define BUFFER_SIZE 42
 # endif
 
-#define SIZE 1024
+#define SIZE 512
 
 typedef struct s_gnl
 {
-	char		**lst;
-	int			index;
-	int			pos_nl;
-	int			len;
+	char	**lst;
+	int		index;
+	int		pos_nl;
+	int		len;
 }	t_gnl;
 
 #endif

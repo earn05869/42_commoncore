@@ -16,23 +16,28 @@ t_gnl	*new_data(char ***remain, int fd)
 {
 	t_gnl	*data;
 	char	**lst;
-	char	*line;
+	int		i;
 
 	if (!(*remain))
 	{
 		*remain =  (char **)malloc(SIZE * sizeof(char *));
 		if (!(*remain))
 			return (NULL);
+		i = -1;
+		while(++i < SIZE)
+			(*remain)[i] = NULL;
 	}
 	data = (t_gnl *)malloc(sizeof(t_gnl));
 	lst = (char **)malloc(SIZE * sizeof(char *));
 	if (!data || !lst)
 	{
-		free_mode(*remain, data, a);
+		free_mode(*remain, data, 'a');
 		return (NULL);
 	}
 	data->index = 0;
+	data->pos_nl = 0;
 	data->len = 0;
+	data->lst = lst;
 	return (data);
 }
 
@@ -52,21 +57,21 @@ int	extract_remain(t_gnl **data, char ***remain, int fd, char **line)
 	found = ft_strlen_chr(tmp, '\n', &len);
 	str = (char *)malloc(len + 1);
 	if (!str)
-	{
-		free_mode((*remain), (*data), 'a');
-		return (1);
-	}
-	ft_memcpy(line, str, len);
+		return (free_mode((*remain), (*data), 'a'), 1);
+	ft_memcpy(str, (*remain)[fd], len);
 	str[len] = '\0';
 	if (found)
 	{
 		*line = str;
-		new_remain(remain, tmp + len, fd);
+		if (new_remain(remain, data, len, fd))
+			return (0);
 		free_mode((*remain), (*data), 'd');
 		return (1);
 	}
 	(*data)->len += len;
 	(*data)->lst[((*data)->index)++] = str;
+	(*data)->pos_nl = len;
+	free(tmp);
 	return (0);
 }
 
@@ -84,8 +89,6 @@ void	free_mode(char **remain , t_gnl *data, char mode)
 	}
 	if (mode == 'a' || mode == 'd')
 	{
-		if (data->line )
-			free(data->line);
 		i = -1;
 		if (data->lst)
 		{
@@ -100,13 +103,16 @@ void	free_mode(char **remain , t_gnl *data, char mode)
 
 int	ft_strlen_chr(const char *str , char c, int *len)
 {
+	int	i;
+
+	i = 0;
 	if (!str)
 		return (0);
-	*len = 0;
-	while (str[*len])
+	while (str[i])
 	{
-		if (c != 0 && str[*len] == c)
+		if (str[i] == c)
 			return (1);
+		i++;
 		(*len)++;
 	}
 	return (0);
@@ -114,14 +120,22 @@ int	ft_strlen_chr(const char *str , char c, int *len)
 
 void	*ft_memcpy(void *dst, const void *src, size_t n)
 {
-	unsigned char	*tmp_dst;
-	unsigned char	*tmp_src;
+	uint8_t*		d;
+	const uint8_t*	s;
 
-	if (!src && !dst)
-		return (dst);
-	tmp_dst = (unsigned char *)dst;
-	tmp_src = (unsigned char *)src;
-	while (n-- > 0)
-		*tmp_dst++ = *tmp_src++;
+	d = (uint8_t*)dst;
+	s = (const uint8_t*)src;
+	while (n >= 8)
+	{
+		*(uint64_t*)d = *(const uint64_t*)s;
+		d += 8;
+		s += 8;
+		n -= 8;
+	}
+	while (n)
+	{
+		*d++ = *s++;
+		n--;
+	}
 	return (dst);
 }
