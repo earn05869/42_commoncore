@@ -12,6 +12,93 @@
 
 #include "get_next_line.h"
 
+static int	read_line(t_gnl **data, char ***remain, int fd)
+{
+	char	*buf;
+	int		write_index;
+	int		byte_read;
+
+	buf = (char *)malloc(SIZE << 2);
+	if (!buf)
+		return (free_mode((*remain), (**data), 'a'), -1);
+	write_index = 0;
+	byte_read = 1;
+	while (write_index + BUFFER_SIZE + 1 < (SIZE << 2) || byte_read == 0)
+	{
+		byte_read = read(fd, buf + write_index, BUFFER_SIZE);
+		if (byte_read == -1 || (byte_read == 0 && !(*data)->lst[0]))
+		{
+			free (buf);
+			if (byte_read == -1)
+				free_mode((*remain), (*data), 'a');
+			else
+				free_mode((*remain), (*data), 'd');
+			return(-1);
+		}
+		write_index += byte_read;
+	}
+	buf[write_index] = '\0';
+	(*data)->lst[((*data)->index)] = ft_realloc(buf, SIZE << 2 , write_index + 1);
+	if (!(*data)->lst[((*data)->index)++])
+		return (free_mode((*remain), (*data), 'a'), -1);
+	(*data)->len += write_index;
+	if (byte_read == 0)
+		return (1)
+	return (ft_strlen_chr((*data)->lst[((*data)->index) - 1], '\n', (*data)->pos_nl));
+}
+
+static void	*ft_realloc(void *ptr, size_t old_size, size_t new_size)
+{
+	void	*new_ptr;
+
+	if (new_size == 0)
+	{
+		free(ptr);
+		return NULL;
+	}
+	if (ptr == NULL) 
+		return malloc(new_size);
+	new_ptr = malloc(new_size);
+	if (!new_ptr)
+	{
+		return NULL;
+	}
+	if (new_size > old_size)
+		memcpy(new_ptr, ptr, old_size);
+	else
+		memcpy(new_ptr, ptr, new_size);
+	free(ptr);
+	return new_ptr;
+}
+
+static int	combine_line(char ***remain, t_gnl **data, char **line, int fd)
+{
+	int	i;
+	int	j;
+	int	len;
+	char	*str;
+
+	i = 0;
+	len = 0;
+	str = (char *)malloc((*data)->pos_nl + 1);
+	if (!str)
+		return (free_mode(remain, data, 'a'), -1);
+	while (i <= (*data)->index && len < (*data)->posnl)
+	{
+		j = 0;
+		while ((*data)->lst[i][j] && len < (*data)->posnl)
+			str[len++] = (*data)->lst[i][j++];
+		i++;
+	}
+	str[len] = '\0';
+	*line = str;
+	if (i < (*data)->index || (*data)->lst[i][++j])
+	{
+		(*data)->index = i;
+		return (j);
+	}
+	return (-2);
+}
 char	*get_next_line(int fd)
 {
 	t_gnl		*data;
@@ -47,93 +134,6 @@ char	*get_next_line(int fd)
 	return (line);
 }
 
-int	read_line(t_gnl **data, char ***remain, int fd)
-{
-	char	*buf;
-	int		write_index;
-	int		byte_read;
-
-	buf = (char *)malloc(SIZE << 2);
-	if (!buf)
-		return (free_mode((*remain), (**data), 'a'), -1);
-	write_index = 0;
-	byte_read = 1;
-	while (write_index + BUFFER_SIZE + 1 < (SIZE << 2) || byte_read == 0)
-	{
-		byte_read = read(fd, buf + write_index, BUFFER_SIZE);
-		if (byte_read == -1 || (byte_read == 0 && !(*data)->lst[0]))
-		{
-			free (buf);
-			if (byte_read == -1)
-				free_mode((*remain), (*data), 'a');
-			else
-				free_mode((*remain), (*data), 'd');
-			return(-1);
-		}
-		write_index += byte_read;
-	}
-	buf[write_index] = '\0';
-	(*data)->lst[((*data)->index)] = ft_realloc(buf, SIZE << 2 , write_index + 1);
-	if (!(*data)->lst[((*data)->index)++])
-		return (free_mode((*remain), (*data), 'a'), -1);
-	(*data)->len += write_index;
-	if (byte_read == 0)
-		return (1)
-	return (ft_strlen_chr((*data)->lst[((*data)->index) - 1], '\n', (*data)->pos_nl));
-}
-
-void	*ft_realloc(void *ptr, size_t old_size, size_t new_size)
-{
-	void	*new_ptr;
-
-	if (new_size == 0)
-	{
-		free(ptr);
-		return NULL;
-	}
-	if (ptr == NULL) 
-		return malloc(new_size);
-	new_ptr = malloc(new_size);
-	if (!new_ptr)
-	{
-		return NULL;
-	}
-	if (new_size > old_size)
-		memcpy(new_ptr, ptr, old_size);
-	else
-		memcpy(new_ptr, ptr, new_size);
-	free(ptr);
-	return new_ptr;
-}
-
-int	combine_line(char ***remain, t_gnl **data, char **line, int fd)
-{
-	int	i;
-	int	j;
-	int	len;
-	char	*str;
-
-	i = 0;
-	len = 0;
-	str = (char *)malloc((*data)->pos_nl + 1);
-	if (!str)
-		return (free_mode(remain, data, 'a'), -1);
-	while (i <= (*data)->index && len < (*data)->posnl)
-	{
-		j = 0;
-		while ((*data)->lst[i][j] && len < (*data)->posnl)
-			str[len++] = (*data)->lst[i][j++];
-		i++;
-	}
-	str[len] = '\0';
-	*line = str;
-	if (i < (*data)->index || (*data)->lst[i][++j])
-	{
-		(*data)->index = i;
-		return (j);
-	}
-	return (-2);
-}
 
 char	*new_remain(char ***remain, t_gnl **data, int start, int fd)
 {
