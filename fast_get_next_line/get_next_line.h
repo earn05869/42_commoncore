@@ -34,4 +34,11 @@ typedef struct s_gnl
 	int		len;
 }	t_gnl;
 
+t_gnl	*new_data(char ***remain, int fd);
+int		extract_remain(t_gnl **data, char ***remain, int fd, char **line);
+void	free_mode(char **remain , t_gnl *data, char mode);
+int		ft_strlen_chr(const char *str , char c, int *len);
+void	*ft_memcpy(void *dst, const void *src, size_t n);
+char	*new_remain(char ***remain, t_gnl **data, int start, int fd);
+
 #endif
