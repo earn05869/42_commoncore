@@ -6,11 +6,11 @@
 /*   By: supanuso <supanuso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 21:18:19 by supanuso          #+#    #+#             */
-/*   Updated: 2025/04/27 21:53:41 by supanuso         ###   ########.fr       */
+/*   Updated: 2025/05/11 21:13:11 by supanuso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/libft.h"
+#include "libft.h"
 
 void	*ft_memset(void *s, int c, size_t n)
 {

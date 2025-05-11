@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/push_swap.h"
+#include "push_swap.h"
 
 void	err_lst(t_list **list_a, char **str)
 {
@@ -39,10 +39,7 @@ int	find_invalid(char *arg, t_list **list_a, char **str)
 			|| arg[i] == '-')
 			i++;
 		else
-		{
-			printf("Error 4\n");
 			err_lst(list_a, str);
-		}
 	}
 	return (0);
 }

@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/push_swap.h"
+#include "push_swap.h"
 
 // void	print_stack(t_stack *stack, char *name)
 // {
@@ -39,7 +39,7 @@ int	main(int argc, char **argv)
 	stack_a = NULL;
 	stack_b = NULL;
 	if (argc < 2)
-		err_stack(NULL, NULL);
+		return (0);
 	stack_a = ft_parse(argc, argv);
 	stack_b = init_stack_b(stack_a, stack_b);
 	if (stack_a->size == 2)
