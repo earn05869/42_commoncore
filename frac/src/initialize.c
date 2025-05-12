@@ -6,7 +6,7 @@
 /*   By: supanuso <supanuso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 16:29:49 by supanuso          #+#    #+#             */
-/*   Updated: 2025/05/02 23:21:27 by supanuso         ###   ########.fr       */
+/*   Updated: 2025/05/12 22:00:21 by supanuso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,9 +27,9 @@ void	set_f(t_fractol *f)
 	f->min_i = f->min_i + (f->max_r - f->min_r) * HEIGHT / WIDTH;
 	f->kr = -0.766667;
 	f->ki = -0.090000;
-	f->sx = 0.0;
-	f->rx = 0.0;
-	f->fx = 0.0;
+	f->fx = 1.0;
+	f->sx = 2.0;
+	f->rx = 0.5; 
 	f->palette = NULL;
 	f->color_pattern = -1;
 	f->color = 0xFFFFFF;

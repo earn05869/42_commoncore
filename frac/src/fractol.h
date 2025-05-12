@@ -6,7 +6,7 @@
 /*   By: supanuso <supanuso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 15:10:20 by supanuso          #+#    #+#             */
-/*   Updated: 2025/05/02 23:31:51 by supanuso         ###   ########.fr       */
+/*   Updated: 2025/05/12 21:58:30 by supanuso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@
 # define ZOOM_FACTOR 1.1
 # define WIDTH 900
 # define HEIGHT 900
-# define MAX_ITER 200
+# define MAX_ITER 50
 
 # define MANDELBROT 1
 # define JULIA 2

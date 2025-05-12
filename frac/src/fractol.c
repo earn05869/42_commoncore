@@ -6,7 +6,7 @@
 /*   By: supanuso <supanuso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 21:47:42 by supanuso          #+#    #+#             */
-/*   Updated: 2025/05/02 23:21:50 by supanuso         ###   ########.fr       */
+/*   Updated: 2025/05/12 21:55:49 by supanuso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ static double	calc_scale(double r, double mag)
 	r_squared = r * r;
 	if (mag < r)
 		return (mag / r_squared);
-	else if (mag < 1.0)
+	if (mag < 1.0)
 		return (1.0 / (mag * mag));
 	return (1.0);
 }
@@ -100,9 +100,10 @@ int	mandelbox(t_fractol *f, double cr, double ci)
 		scale = calc_scale(f->rx, sqrt(mag));
 		vr = vr * f->sx * scale + cr;
 		vi = vi * f->sx * scale + ci;
-		if ((vr * vr + vi * vi) > 4.0)
+		if ((vr * vr + vi * vi) > 100.0)
 			break ;
 		n++;
 	}
 	return (n);
 }
+

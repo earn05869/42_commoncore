@@ -1,39 +1,51 @@
-NAME = fractol
-CC = gcc
-CFLAGS = -Wall -Wextra -Werror -Ofast -funroll-loops
-INCLUDES = -I./libft -I./fractol
-LIBFT = ./libft/libft.a
-MLX_FLAGS = -lmlx -lm -lXext -lX11
-SRC_DIR = ./src
-SRC = 	main.c help.c parse.c initialize.c arg.c \
-		img.c color.c fractol.c render.c event.c \
-		zoom.c zoom2.c
-SRCS = $(addprefix $(SRC_DIR)/, $(SRC))
-OBJ_PATH = obj/
-OBJ = $(SRC:.c=.o)
-OBJS = $(addprefix $(OBJ_PATH), $(notdir $(OBJ)))
+NAME        = fractol
+CC          = cc
+CFLAGS      = -Wall -Wextra -Werror -O3
 
+SRCDIR      = src
+OBJDIR      = obj
+LIBFTDIR    = libft
+# MLXFLAGS    = -lm -lmlx -framework OpenGL -framework AppKit
+MLXFLAGS = -lmlx -lXext -lX11 -lm
+INCLUDES    = -I$(SRCDIR) -I$(LIBFTDIR)
+
+# Source files
+SRCS = main.c fractol.c zoom.c zoom2.c arg.c \
+       render.c color.c event.c help.c parse.c \
+       img.c initialize.c
+
+# Object files
+OBJS = $(addprefix $(OBJDIR)/, $(SRCS:.c=.o))
+
+# Libft
+LIBFT = $(LIBFTDIR)/libft.a
+
+.PHONY: all clean fclean re bonus
+
+# Default: mandatory build
 all: $(LIBFT) $(NAME)
 
-$(NAME): $(OBJS) $(LIBFT)
-	$(CC) $(OBJS) $(LIBFT) $(CFLAGS) $(INCLUDES) $(MLX_FLAGS) -o $(NAME)
+$(NAME): $(OBJS)
+	$(CC) $(CFLAGS) $(OBJS) $(LIBFT) $(MLXFLAGS) -o $(NAME)
 
-$(OBJ_PATH)%.o: $(SRC_DIR)/%.c
-	@mkdir -p $(OBJ_PATH)
+$(OBJDIR)/%.o: $(SRCDIR)/%.c
+	@mkdir -p $(OBJDIR)
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
+# Libft build
 $(LIBFT):
-	@echo "Making libft..."
-	@make -sC ./libft
+	$(MAKE) -C $(LIBFTDIR)
 
+# Bonus build (optional: use _bonus.c files if added later)
+bonus: all
+
+# Cleaning rules
 clean:
-	$(MAKE) clean -C ./libft
-	$(RM) $(OBJ_PATH)*.o
+	$(MAKE) -C $(LIBFTDIR) clean
+	rm -rf $(OBJDIR)
 
 fclean: clean
-	$(MAKE) fclean -C ./libft
-	$(RM) $(NAME)
+	$(MAKE) -C $(LIBFTDIR) fclean
+	rm -f $(NAME)
 
 re: fclean all
-
-.PHONY: all clean fclean re
