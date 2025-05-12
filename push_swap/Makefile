@@ -12,18 +12,12 @@ SRCS =  main.c best_move.c lis.c medain.c \
 		parse.c parse_utils.c push_chunk.c \
 		push_swap_utils.c sort.c sort_large_utils.c sort_utils.c
 
-# Object files
 OBJS = $(addprefix $(OBJDIR)/, $(SRCS:.c=.o))
 
-# Libft
 LIBFT = $(LIBFTDIR)/libft.a
 
-# Include paths
 INCLUDES = -I$(INCDIR) -I$(LIBFTDIR)
 
-.PHONY: all clean fclean re
-
-# Default target
 all: $(LIBFT) $(NAME)
 
 $(NAME): $(OBJS)
@@ -45,3 +39,5 @@ fclean: clean
 	rm -f $(NAME)
 
 re: fclean all
+
+.PHONY: all clean fclean re
