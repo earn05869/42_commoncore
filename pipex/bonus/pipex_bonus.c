@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex_bonus.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: supanuso <supanuso@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jidchind <jidchind@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/15 22:37:07 by supanuso          #+#    #+#             */
-/*   Updated: 2025/05/11 21:00:44 by supanuso         ###   ########.fr       */
+/*   Updated: 2025/05/13 15:05:22 by jidchind         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,16 +43,10 @@ void	get_heredoc(t_pipex *d, char **av, int stdin_fd, int tmp_fd)
 
 static void	child(t_pipex *d, int i)
 {
-	if (i == 0)
-	{
-		if (d->in_fd != -1)
-			redirect_io(d->in_fd, d->fd[0][1], d);
-	}
-	else if (i == d->n_cmds - 1)
-	{
-		if (d->out_fd != -1)
-			redirect_io(d->fd[i - 1][0], d->out_fd, d);
-	}
+	if (i == 0 && d->in_fd != -1)
+		redirect_io(d->in_fd, d->fd[0][1], d);
+	else if (i == d->n_cmds - 1 && d->out_fd != -1)
+		redirect_io(d->fd[i - 1][0], d->out_fd, d);
 	else
 		redirect_io(d->fd[i - 1][0], d->fd[i][1], d);
 	close_fds(d);
@@ -61,35 +55,30 @@ static void	child(t_pipex *d, int i)
 		if (unset_path(d))
 			return ;
 		ft_putstr_fd("pipex: command not found: ", 2);
-		ft_putstr_fd(d->cmd[0], 2);
-		ft_putstr_fd("\n", 2);
+		ft_putendl_fd(d->cmd[0], 2);
 		free_data(d, 0);
-		exit(127);
+		if (i == d->n_cmds - 1)
+			exit(127);
+		exit(0);
 	}
 	if (execve(d->cmd_path, d->cmd, d->envp) == -1)
-		exit_error(d->cmd[i], 1, d);
+		exit_error(d->cmd[i], 0, d);
 }
 
-static int	parent(t_pipex *d)
+static int	parent(t_pipex *d, pid_t last_pid)
 {
 	pid_t	wpid;
 	int		status;
 	int		exit_code;
-	int		child_exit_code;
 
+	exit_code = 1;
 	close_fds(d);
-	exit_code = 0;
-	while (1)
+	wpid = wait(&status);
+	while (wpid > 0)
 	{
+		if (wpid == last_pid && WIFEXITED(status))
+			exit_code = WEXITSTATUS(status);
 		wpid = wait(&status);
-		if (wpid <= 0)
-			break ;
-		if (WIFEXITED(status))
-		{
-			child_exit_code = WEXITSTATUS(status);
-			if (child_exit_code != 0)
-				exit_code = child_exit_code;
-		}
 	}
 	if (d->out_fd == -1)
 		exit_code = 1;
@@ -101,14 +90,14 @@ static int	pipex(int ac, char **av, char **env, int heredoc)
 {
 	int		i;
 	int		exit_code;
+	pid_t	last_pid;
 	t_pipex	d;
 
 	d = init_data(ac, heredoc, av, env);
 	i = -1;
 	while (++i < d.n_cmds)
 	{
-		if ((d.in_fd == -1 && i == 0)
-			|| (d.out_fd == -1 && i == d.n_cmds - 1))
+		if ((d.in_fd == -1 && i == 0) || (d.out_fd == -1 && i == d.n_cmds - 1))
 			continue ;
 		d.cmd = ft_split(av[i + 2 + heredoc], ' ');
 		if (!d.cmd)
@@ -119,9 +108,10 @@ static int	pipex(int ac, char **av, char **env, int heredoc)
 			exit_error("fork", 1, &d);
 		else if (d.pid[i] == 0)
 			child(&d, i);
+		last_pid = d.pid[i];
 		free_args_and_path(d.cmd, d.cmd_path);
 	}
-	exit_code = parent(&d);
+	exit_code = parent(&d, last_pid);
 	return (exit_code);
 }
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: supanuso <supanuso@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jidchind <jidchind@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/05 12:59:39 by supanuso          #+#    #+#             */
-/*   Updated: 2025/05/09 03:02:04 by supanuso         ###   ########.fr       */
+/*   Updated: 2025/05/13 14:14:54 by jidchind         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ int	unset_path(t_pipex *d)
 			|| (cmd[0] == '.' && cmd[1] == '/')))
 	{
 		if (execve(cmd, d->cmd, d->envp) == -1)
-			exit_error(cmd, 2, d);
+			exit_error(cmd, 0, d);
 		return (1);
 	}
 	return (0);

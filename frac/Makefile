@@ -1,44 +1,58 @@
-NAME        = fractol
-CC          = cc
-CFLAGS      = -Wall -Wextra -Werror -O3
+NAME		:= fractol
 
-SRCDIR      = src
-OBJDIR      = obj
-LIBFTDIR    = libft
-# MLXFLAGS    = -lm -lmlx -framework OpenGL -framework AppKit
-MLXFLAGS = -lmlx -lXext -lX11 -lm
-INCLUDES    = -I$(SRCDIR) -I$(LIBFTDIR)
+CC			:= cc
+CFLAGS		:= -Wall -Wextra -Werror -Ofast
 
-SRCS = main.c fractol.c zoom.c zoom2.c arg.c \
-       render.c color.c event.c help.c parse.c \
-       img.c initialize.c
+SRC_DIR		:= ./src
+INC_DIR		:= ./include
+LIBFT_DIR	:= ./libft
+MLX_DIR		:= ./MLX42
 
-OBJS = $(addprefix $(OBJDIR)/, $(SRCS:.c=.o))
+LIBFT		:= $(LIBFT_DIR)/libft.a
+MLX			:= $(MLX_DIR)/build/libmlx42.a
+LIBS		:= $(MLX) $(LIBFT) -ldl -lglfw -pthread -lm
 
-LIBFT = $(LIBFTDIR)/libft.a
+INCLUDES	:= -I$(INC_DIR) -I$(LIBFT_DIR) -I$(MLX_DIR)/include
 
-all: $(LIBFT) $(NAME)
+SRCS		:= $(shell find $(SRC_DIR) -type f -name "*.c")
+OBJS		:= $(SRCS:.c=.o)
+
+MLX_GIT		:= https://github.com/codam-coding-college/MLX42.git
+
+all: $(LIBFT) mlx42 $(NAME)
 
 $(NAME): $(OBJS)
-	$(CC) $(CFLAGS) $(OBJS) $(LIBFT) $(MLXFLAGS) -o $(NAME)
-
-$(OBJDIR)/%.o: $(SRCDIR)/%.c
-	@mkdir -p $(OBJDIR)
-	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+	@$(CC) $(CFLAGS) $(OBJS) $(LIBS) -o $(NAME)
+	@echo "Built: $(NAME)"
 
 $(LIBFT):
-	$(MAKE) -C $(LIBFTDIR)
+	@$(MAKE) -C $(LIBFT_DIR)
 
-bonus: all
+mlx42: clone_mlx
+	@cmake -S $(MLX_DIR) -B $(MLX_DIR)/build > /dev/null
+	@cmake --build $(MLX_DIR)/build -j4 > /dev/null
+
+clone_mlx:
+	@if [ ! -d $(MLX_DIR) ]; then \
+		echo "Cloning MLX42 from GitHub..."; \
+		git clone $(MLX_GIT) $(MLX_DIR); \
+	fi
+
+%.o: %.c
+	@$(CC) $(CFLAGS) -c $< -o $@ $(INCLUDES)
+	@echo "Compiled: $<"
 
 clean:
-	$(MAKE) -C $(LIBFTDIR) clean
-	rm -rf $(OBJDIR)
+	@rm -f $(OBJS)
+	@$(MAKE) -C $(LIBFT_DIR) clean
+	@rm -rf $(MLX_DIR)/build
+	@echo "Clean done."
 
 fclean: clean
-	$(MAKE) -C $(LIBFTDIR) fclean
-	rm -f $(NAME)
+	@rm -f $(NAME)
+	@$(MAKE) -C $(LIBFT_DIR) fclean
+	@echo "Full clean done."
 
 re: fclean all
 
-.PHONY: all clean fclean re bonus
+.PHONY: all clean fclean re mlx42 clone_mlx

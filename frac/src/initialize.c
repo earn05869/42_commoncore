@@ -6,7 +6,7 @@
 /*   By: supanuso <supanuso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 16:29:49 by supanuso          #+#    #+#             */
-/*   Updated: 2025/05/12 22:00:21 by supanuso         ###   ########.fr       */
+/*   Updated: 2025/05/16 16:55:44 by supanuso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,7 @@
 void	set_f(t_fractol *f)
 {
 	f->mlx = NULL;
-	f->win = NULL;
 	f->img = NULL;
-	f->buf = NULL;
 	f->tmp_buf = NULL;
 	f->zoom_level = 0;
 	f->set = -1;
@@ -29,10 +27,10 @@ void	set_f(t_fractol *f)
 	f->ki = -0.090000;
 	f->fx = 1.0;
 	f->sx = 2.0;
-	f->rx = 0.5; 
+	f->rx = 0.5;
 	f->palette = NULL;
 	f->color_pattern = -1;
-	f->color = 0xFFFFFF;
+	f->color = 0xFFFFFFFF;
 }
 
 void	get_complex_plane(t_fractol *f)
@@ -67,36 +65,17 @@ void	color_shift(t_fractol *f)
 	f->color_pattern = (f->color_pattern + 1) % 3;
 	reinit_img(f);
 	if (f->color == 0xFFFFFF)
-		alt_color = 0x333333;
+		alt_color = 0x333333FF;
 	else
 		alt_color = f->color;
-	if (f->color_pattern == 0)
-		monocolor(f, alt_color);
-	else if (f->color_pattern == 1)
-	{
-		multiplecolor(f, (int [4]){0x000000, alt_color,
-			get_percent_color(f->color, 50), 0xFFFFFF}, 4);
-	}
-	else if (f->color_pattern == 2)
-	{
-		multiplecolor(f, (int [5]){
-			0x0000FF,
-			0x00FF00,
-			0xFFFF00,
-			0xFF0000,
-			0xFFFFFF
-		}, 5);
-	}
+	set_pallette(f, alt_color);
 }
 
 void	init(t_fractol *f)
 {
-	f->mlx = mlx_init();
+	f->mlx = mlx_init(WIDTH, HEIGHT, "fractol", true);
 	if (!f->mlx)
 		err_exit("mlx_init", f);
-	f->win = mlx_new_window(f->mlx, WIDTH, HEIGHT, "fractol");
-	if (!f->win)
-		err_exit("mlx_new_window", f);
 	f->sx = 2.0;
 	f->rx = 0.5;
 	f->fx = 1.0;

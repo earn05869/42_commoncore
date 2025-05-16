@@ -6,7 +6,7 @@
 /*   By: supanuso <supanuso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 15:10:20 by supanuso          #+#    #+#             */
-/*   Updated: 2025/05/12 21:58:30 by supanuso         ###   ########.fr       */
+/*   Updated: 2025/05/16 16:54:45 by supanuso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,8 @@
 # include <stdio.h>
 # include <string.h>
 # include <math.h>
-# include <mlx.h>
+# include "../MLX42/include/MLX42/MLX42.h"
+
 # include "../libft/libft.h"
 # include "key.h"
 
@@ -31,16 +32,12 @@
 
 # define MANDELBROT 1
 # define JULIA 2
-# define BURNING_SHIP 3
-# define TRICORN 4
 # define MANDELBOX 5
 
 typedef struct s_fractol
 {
-	void			*mlx;
-	void			*win;
-	void			*img;
-	unsigned char	*buf;
+	mlx_t			*mlx;
+	mlx_image_t		*img;
 	unsigned char	*zoom_buf;
 	unsigned char	*tmp_buf;
 	int				zoom_level;
@@ -97,8 +94,9 @@ void	reinit_img(t_fractol *f);
 void	err_exit(char *msg, t_fractol *f);
 
 void	monocolor(t_fractol *f, int color);
-void	multiplecolor(t_fractol *f, int color[4], int n);
+void	multiplecolor(t_fractol *f, int *color, int n);
 int		get_percent_color(int color, double percent);
+void	set_pallette(t_fractol *f, int alt_color);
 
 void	render(t_fractol *f);
 void	render_zoom(t_fractol *f);
@@ -107,11 +105,11 @@ int		mandelbrot(double pr, double pi);
 int		julia(t_fractol *f, double pr, double pi);
 int		mandelbox(t_fractol *f, double pr, double pi);
 
-int		close_window(t_fractol *f);
+void	close_window(void *param);
 void	fill_newbuf(t_fractol *f, t_zoom *z, unsigned char *new_buf);
 void	zoom(t_fractol *f, int pos_x, int pos_y, int in_out);
 
-int		key_hook(int keycode, t_fractol *f);
-int		mouse_hook(int button, int x, int y, t_fractol *f);
+void	key_hook(mlx_key_data_t keydata, void *param);
+void	mouse_hook(double xdelta, double ydelta, void *param);
 
 #endif

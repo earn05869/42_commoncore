@@ -6,7 +6,7 @@
 /*   By: supanuso <supanuso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 21:47:42 by supanuso          #+#    #+#             */
-/*   Updated: 2025/05/12 21:55:49 by supanuso         ###   ########.fr       */
+/*   Updated: 2025/05/13 19:47:08 by supanuso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,48 +62,43 @@ int	julia(t_fractol *f, double pr, double pi)
 
 static double	box_fold(double v)
 {
-	if (v > 1.0)
-		v = 2.0 - v;
-	else if (v < -1.0)
-		v = -2.0 - v;
+	if (v > 1)
+		v = 2 - v;
+	else if (v < -1)
+		v = -2 - v;
 	return (v);
 }
 
-static double	calc_scale(double r, double mag)
+static double	ball_fold(double r, double m)
 {
-	double	r_squared;
-
-	r_squared = r * r;
-	if (mag < r)
-		return (mag / r_squared);
-	if (mag < 1.0)
-		return (1.0 / (mag * mag));
-	return (1.0);
+	if (m < r)
+		m = m / (r * r);
+	else if (m < 1)
+		m = 1 / (m * m);
+	return (m);
 }
 
 int	mandelbox(t_fractol *f, double cr, double ci)
 {
+	int		n;
 	double	vr;
 	double	vi;
 	double	mag;
-	double	scale;
-	int		n;
 
 	vr = cr;
 	vi = ci;
+	mag = 0;
 	n = 0;
 	while (n < MAX_ITER)
 	{
 		vr = f->fx * box_fold(vr);
 		vi = f->fx * box_fold(vi);
-		mag = vr * vr + vi * vi;
-		scale = calc_scale(f->rx, sqrt(mag));
-		vr = vr * f->sx * scale + cr;
-		vi = vi * f->sx * scale + ci;
-		if ((vr * vr + vi * vi) > 100.0)
+		mag = sqrt(vr * vr + vi * vi);
+		vr = vr * f->sx * ball_fold(f->rx, mag) + cr;
+		vi = vi * f->sx * ball_fold(f->rx, mag) + ci;
+		if (sqrt(mag) > 2)
 			break ;
 		n++;
 	}
 	return (n);
 }
-

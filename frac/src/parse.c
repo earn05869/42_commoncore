@@ -6,7 +6,7 @@
 /*   By: supanuso <supanuso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 16:37:26 by supanuso          #+#    #+#             */
-/*   Updated: 2025/05/12 21:35:02 by supanuso         ###   ########.fr       */
+/*   Updated: 2025/05/16 16:04:17 by supanuso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,6 @@ static void	get_set(char *str, t_fractol *f)
 		f->set = MANDELBROT;
 	else if (!strncmp(str, "J", 2) || !strncmp(str, "Julia", 6))
 		f->set = JULIA;
-	// else if (!strncmp(str, "B", 2) || !strncmp(str, "Burning Ship", 12))
-	// 	f->set = BURNING_SHIP;
-	// else if (!strncmp(str, "T", 2) || !strncmp(str, "Tricorn", 7))
-	// 	f->set = TRICORN;
 	else if (!strncmp(str, "X", 2) || !strncmp(str, "Mandelbox", 9))
 		f->set = MANDELBOX;
 	else
@@ -61,7 +57,7 @@ static void	set_color(int argc, char **argv, t_fractol *f)
 		f->color = 0xed7a91;
 	else
 		display_help(f);
-	if (f->color < 0x000000)
+	if (f->color < 0)
 		display_help(f);
 }
 

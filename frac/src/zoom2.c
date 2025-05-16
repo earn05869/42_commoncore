@@ -6,7 +6,7 @@
 /*   By: supanuso <supanuso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/01 21:58:47 by supanuso          #+#    #+#             */
-/*   Updated: 2025/05/02 23:24:11 by supanuso         ###   ########.fr       */
+/*   Updated: 2025/05/16 16:33:40 by supanuso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ static void	crop_zoom(t_fractol *f, double p_x, double p_y, double factor)
 	z.factor_inv = 1.0 / factor;
 	z.offset_x = p_x - (WIDTH / 2.0) * z.factor_inv;
 	z.offset_y = p_y - (HEIGHT / 2.0) * z.factor_inv;
-	fill_newbuf(f, &z, f->buf);
+	fill_newbuf(f, &z, f->img->pixels);
 }
 
 static double	get_zoom_from_level(int zoom_level)
@@ -83,8 +83,8 @@ void	zoom(t_fractol *f, int pos_x, int pos_y, int in_out)
 
 	f->zoom_level = f->zoom_level + in_out;
 	factor = get_zoom_from_level(f->zoom_level);
-	x_offset = pos_x ;
-	y_offset = pos_y ;
+	x_offset = pos_x;
+	y_offset = pos_y;
 	reset_zoom_bounds(f, x_offset, y_offset, in_out);
 	if (f->zoom_level > 2 || f->zoom_level < 0
 		|| pos_x != WIDTH / 2 || pos_y != HEIGHT / 2)
@@ -94,8 +94,7 @@ void	zoom(t_fractol *f, int pos_x, int pos_y, int in_out)
 	}
 	else
 	{
-		mlx_clear_window(f->mlx, f->win);
 		crop_zoom(f, WIDTH / 2, HEIGHT / 2, factor);
-		mlx_put_image_to_window(f->mlx, f->win, f->img, 0, 0);
+		mlx_image_to_window(f->mlx, f->img, 0, 0);
 	}
 }

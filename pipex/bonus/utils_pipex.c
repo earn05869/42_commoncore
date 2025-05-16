@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils_pipex.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: supanuso <supanuso@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jidchind <jidchind@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/15 22:48:33 by supanuso          #+#    #+#             */
-/*   Updated: 2025/05/11 21:00:49 by supanuso         ###   ########.fr       */
+/*   Updated: 2025/05/13 14:57:49 by jidchind         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,12 +46,7 @@ void	exit_error(char *msg, int exitcode, t_pipex *d)
 	ft_putstr_fd("pipex: ", 2);
 	perror(msg);
 	free_data(d, 0);
-	if (errno == ENOENT)
-		exit(127);
-	else if (errno == EACCES)
-		exit(126);
-	else
-		exit(exitcode);
+	exit(exitcode);
 }
 
 void	redirect_io(int input, int output, t_pipex *d)

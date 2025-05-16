@@ -6,7 +6,7 @@
 /*   By: supanuso <supanuso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 15:30:47 by supanuso          #+#    #+#             */
-/*   Updated: 2025/05/02 22:07:38 by supanuso         ###   ########.fr       */
+/*   Updated: 2025/05/16 16:34:07 by supanuso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,14 +16,9 @@ void	err_exit(char *msg, t_fractol *f)
 {
 	perror(msg);
 	if (f->img)
-		mlx_destroy_image(f->mlx, f->img);
-	if (f->win)
-		mlx_destroy_window(f->mlx, f->win);
+		mlx_delete_image(f->mlx, f->img);
 	if (f->mlx)
-	{
-		mlx_destroy_display(f->mlx);
-		free(f->mlx);
-	}
+		mlx_terminate(f->mlx);
 	if (f->palette)
 		free(f->palette);
 	if (f->tmp_buf)
@@ -31,19 +26,20 @@ void	err_exit(char *msg, t_fractol *f)
 	exit(EXIT_FAILURE);
 }
 
-int	main(int argc, char **argv)
+int32_t	main(int argc, char **argv)
 {
 	t_fractol	f;
 
+	set_f(&f);
 	if (argc < 2)
 		display_help(&f);
-	set_f(&f);
 	handle_arg(argc, argv, &f);
 	init(&f);
 	render(&f);
-	mlx_hook(f.win, 17, 0, close_window, &f);
-	mlx_key_hook(f.win, key_hook, &f);
-	mlx_mouse_hook(f.win, mouse_hook, &f);
+	mlx_key_hook(f.mlx, &key_hook, &f);
+	mlx_scroll_hook(f.mlx, &mouse_hook, &f);
+	mlx_close_hook(f.mlx, &close_window, &f);
 	mlx_loop(f.mlx);
+	mlx_terminate(f.mlx);
 	return (0);
 }
